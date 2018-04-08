@@ -47,6 +47,16 @@ static char DZNWebViewControllerKVOContext = 0;
     return self;
 }
 
+- (instancetype)initWithRequest:(NSURLRequest *)request
+{
+    NSParameterAssert(request);
+    self = [self init];
+    if(self) {
+        _request = request;
+    }
+    return self;
+}
+
 - (instancetype)initWithURL:(NSURL *)URL
 {
     NSParameterAssert(URL);
@@ -117,7 +127,11 @@ static char DZNWebViewControllerKVOContext = 0;
     }
     
     if (!self.webView.URL) {
-        [self loadURL:self.URL];
+        if (self.URL) {
+            [self loadURL:self.URL];
+        }else {
+            [self.webView loadRequest:self.request];
+        }
     }
 }
 
@@ -143,6 +157,7 @@ static char DZNWebViewControllerKVOContext = 0;
 	[super viewDidDisappear:animated];
     
     [self.webView stopLoading];
+    [self clearProgressViewAnimated:animated];
 }
 
 
